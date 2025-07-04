@@ -32,6 +32,9 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Create Android directories
+        run: mkdir -p android/app
+
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
