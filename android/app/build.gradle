@@ -21,12 +21,14 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: "dev.flutter.flutter-gradle-plugin"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id "dev.flutter.flutter-gradle-plugin"
+}
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34 // Updated to 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -45,14 +47,23 @@ android {
     defaultConfig {
         applicationId "com.whymyhuman.apkgemin"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34 // Updated to 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias System.getenv('KEY_ALIAS') ?: keystoreProperties['keyAlias']
+            keyPassword System.getenv('KEY_PASSWORD') ?: keystoreProperties['keyPassword']
+            storeFile System.getenv('STORE_FILE_PATH') ? file(System.getenv('STORE_FILE_PATH')) : (keystoreProperties['storeFile'] != null ? file(keystoreProperties['storeFile']) : null)
+            storePassword System.getenv('STORE_PASSWORD') ?: keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release // Ensure this is correct
         }
     }
 }
@@ -60,5 +71,3 @@ android {
 flutter {
     source '../..'
 }
-
-
